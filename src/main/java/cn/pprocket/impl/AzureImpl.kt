@@ -1,22 +1,26 @@
-package cn.pprocket.impl;
+package cn.pprocket.impl
 
-import cn.pprocket.Client;
-import cn.pprocket.object.Video;
+import cn.pprocket.Client
+import cn.pprocket.`object`.Video
 
-import java.util.List;
-
-public class AzureImpl implements Client {
-    public void login(String deviceId) {
-        System.out.println("AzureImpl login");
+class AzureImpl : Client {
+    override fun login(deviceId: String) {
+        println("AzureImpl login")
     }
 
-    @Override
-    public List<Video> getRecommend() {
-        return null;
+    override fun getRecommend(): List<Video> {
+        return listOf()
     }
 
-    @Override
-    public Video getVideo(String id) {
-        return null;
+    override fun getVideo(id: String): Video {
+        return Video()
+    }
+
+    override fun getPlayLink(video: Video): String {
+        return ""
+    }
+
+    protected fun buildURL(): String {
+        return ""
     }
 }

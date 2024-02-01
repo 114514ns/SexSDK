@@ -4,6 +4,7 @@ import cn.pprocket.Client;
 import cn.pprocket.object.Video;
 import cn.pprocket.utils.Enctypt;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Data;
@@ -14,8 +15,8 @@ import okio.Buffer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import static cn.pprocket.impl.AlphaImpl.gson;
@@ -61,6 +62,7 @@ public class AlphaImpl implements Client {
     @Override
     public List<Video> getRecommend() {
         String url = domain + "app/api/search/list";
+        List<Video> videoList = new ArrayList<>();
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Content-Type", "application/json")
@@ -69,16 +71,46 @@ public class AlphaImpl implements Client {
                 .build();
         try {
             String string = client.newCall(request).execute().body().string();
+            JsonArray array = JsonParser.parseString(string).getAsJsonArray();
+            array.forEach(jsonElement -> {
+                JsonObject object = jsonElement.getAsJsonObject();
+                Video video = new Video();
+                String id = object.get("id").getAsString();
+                String title = object.get("title").getAsString();
+                String cover = object.get("cover").getAsString();
+                String duration = object.get("duration").getAsString();
+                String originLink = object.get("smu").getAsString();
+                video.setTitle(title);
+                video.setCover(cover);
+                video.setLength(Integer.parseInt(duration));
+                video.setOriginLink(originLink);
+                videoList.add(video);
+            });
             System.gc();;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return videoList;
     }
 
     @Override
     public Video getVideo(String id) {
         return null;
+    }
+
+
+    @Override
+    public String getPlayLink(Video video) {
+        String url = "https://parser.ikuntech.xyz/parser?origin=" + video.getOriginLink() + "&&count=" + video.getLength();
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        try {
+            return client.newCall(request).execute().body().string();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     // AES PKCS7Padding
 
