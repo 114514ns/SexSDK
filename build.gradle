@@ -11,6 +11,15 @@ repositories {
 
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
+    //lombok
+    implementation 'org.projectlombok:lombok:1.18.28'
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.9'
+    annotationProcessor('org.projectlombok:lombok:1.18.28')
+    //okhttp
+    implementation 'com.squareup.okhttp3:okhttp-jvm:5.0.0-alpha.11'
+
 }
 
 test {
