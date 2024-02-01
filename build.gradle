@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.slf4j:slf4j-api:2.1.0-alpha1'
+    implementation 'org.slf4j:slf4j-simple:2.1.0-alpha1'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
     //lombok
@@ -19,6 +21,8 @@ dependencies {
     annotationProcessor('org.projectlombok:lombok:1.18.28')
     //okhttp
     implementation 'com.squareup.okhttp3:okhttp-jvm:5.0.0-alpha.11'
+    //log4j2
+
 
 }
 
