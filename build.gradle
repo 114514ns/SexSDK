@@ -21,7 +21,10 @@ dependencies {
     annotationProcessor('org.projectlombok:lombok:1.18.28')
     //okhttp
     implementation 'com.squareup.okhttp3:okhttp-jvm:5.0.0-alpha.11'
-    //log4j2
+    //junit5
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+    implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 
 
 }

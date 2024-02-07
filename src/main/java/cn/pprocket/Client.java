@@ -10,4 +10,6 @@ public interface Client {
     Video getVideo(String id);
 
     String getPlayLink(Video video);
+    String getCookie();
+    List<Video> getRelated();
 }

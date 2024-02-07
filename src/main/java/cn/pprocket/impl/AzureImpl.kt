@@ -20,6 +20,15 @@ class AzureImpl : Client {
         return ""
     }
 
+
+    override fun getCookie(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRelated(): MutableList<Video> {
+        TODO("Not yet implemented")
+    }
+
     protected fun buildURL(): String {
         return ""
     }

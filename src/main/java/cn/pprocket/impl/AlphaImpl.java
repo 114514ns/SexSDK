@@ -112,6 +112,16 @@ public class AlphaImpl implements Client {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String getCookie() {
+        return cookie;
+    }
+
+    @Override
+    public List<Video> getRelated() {
+        return null;
+    }
     // AES PKCS7Padding
 
 
