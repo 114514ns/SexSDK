@@ -1,5 +1,8 @@
 package cn.pprocket.object;
 
+import lombok.Data;
+
+@Data
 public class User {
-    public String name;
+    private String name;
 }

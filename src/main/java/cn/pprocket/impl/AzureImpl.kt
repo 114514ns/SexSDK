@@ -8,7 +8,7 @@ class AzureImpl : Client {
         println("AzureImpl login")
     }
 
-    override fun getRecommend(): List<Video> {
+    override fun getRecommend(page:Int): List<Video> {
         return listOf()
     }
 
@@ -26,6 +26,10 @@ class AzureImpl : Client {
     }
 
     override fun getRelated(): MutableList<Video> {
+        TODO("Not yet implemented")
+    }
+
+    override fun search(keyword: String?, page: Int): MutableList<Video> {
         TODO("Not yet implemented")
     }
 

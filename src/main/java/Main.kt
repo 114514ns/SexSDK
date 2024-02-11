@@ -11,19 +11,12 @@ import javax.crypto.spec.SecretKeySpec
 
 fun main() {
     Security.addProvider(BouncyCastleProvider())
-    /*
-    var client = AlphaImpl()
+    val client = AlphaImpl()
     client.login("7c706e97-108a-3f61-8e07-14da33dea564")
-    var recommend = client.recommend
+    var recommend = client.getRecommend(15)
     System.nanoTime()
 
-     */
-    var file = File("C:\\Users\\zhang\\Downloads\\f5bc26271b347915.ceb")
-    file.readBytes().let {
-        decryptImage(it)
-    }.let {
-        File("C:\\Users\\zhang\\Downloads\\f5bc26271b347915.jpg").writeBytes(it)
-    }
+
 
 }
 private fun decryptImage(body: ByteArray): ByteArray {

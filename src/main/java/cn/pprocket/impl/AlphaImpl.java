@@ -1,6 +1,7 @@
 package cn.pprocket.impl;
 
 import cn.pprocket.Client;
+import cn.pprocket.object.User;
 import cn.pprocket.object.Video;
 import cn.pprocket.utils.Enctypt;
 import com.google.gson.Gson;
@@ -60,14 +61,17 @@ public class AlphaImpl implements Client {
     }
 
     @Override
-    public List<Video> getRecommend() {
+    public List<Video> getRecommend(int page) {
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setPage(page);
+        pageInfo.setPage_size(20);
         String url = domain + "app/api/search/list";
         List<Video> videoList = new ArrayList<>();
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Cookie", cookie)
-                .post(RequestBody.create("{\"page\":\"1\",\"page_size\":\"20\"}".getBytes()))
+                .post(RequestBody.create(gson.toJson(pageInfo).getBytes()))
                 .build();
         try {
             String string = client.newCall(request).execute().body().string();
@@ -80,13 +84,21 @@ public class AlphaImpl implements Client {
                 String cover = object.get("cover").getAsString();
                 String duration = object.get("duration").getAsString();
                 String originLink = object.get("smu").getAsString();
+                List<String> tags = new ArrayList<>();
+                object.getAsJsonArray("category").forEach(ele -> {
+                    tags.add(((JsonObject) ele).get("title").getAsString());
+                });
+                video.setTags(tags);
                 video.setTitle(title);
                 video.setCover(cover);
                 video.setLength(Integer.parseInt(duration));
                 video.setOriginLink(originLink);
+                User user = new User();
+                user.setName(object.get("user").getAsJsonObject().get("nick").getAsString());
+                video.setAuthor(user);
+                video.setTime(object.get("created_at").getAsString());
                 videoList.add(video);
             });
-            System.gc();;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -122,6 +134,11 @@ public class AlphaImpl implements Client {
     public List<Video> getRelated() {
         return null;
     }
+
+    @Override
+    public List<Video> search(String keyword, int page) {
+        return null;
+    }
     // AES PKCS7Padding
 
 
@@ -136,7 +153,12 @@ class LoginModel {
     private String device_type = "A";
     private String version = "1.3.0";
 }
+@Data
+class PageInfo {
+    private int page;
+    private int page_size;
 
+}
 @NoArgsConstructor
 @Data
 class TokenBean {

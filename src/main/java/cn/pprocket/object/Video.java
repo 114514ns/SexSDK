@@ -2,12 +2,15 @@ package cn.pprocket.object;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Video {
-    public String title;
-    public String cover;
-    public User author;
-    public int length;
-    public String[] tag;
-    public String originLink;
+    private String title;
+    private String cover;
+    private User author;
+    private int length;
+    private List<String> tags;
+    private String originLink;
+    private String time;
 }
