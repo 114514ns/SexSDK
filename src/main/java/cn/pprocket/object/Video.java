@@ -13,4 +13,6 @@ public class Video {
     private List<String> tags;
     private String originLink;
     private String time;
+    private int id;
+    private int views;
 }

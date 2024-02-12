@@ -16,6 +16,7 @@ import okio.Buffer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class AlphaImpl implements Client {
     protected static final Gson gson = new Gson();
     protected OkHttpClient client = new OkHttpClient.Builder()
             .addInterceptor(new EncryptInterceptor())
-            //.proxy(new Proxy(Proxy.Type.HTTP, new java.net.InetSocketAddress("127.0.0.1", 9000)))
+            .proxy(new Proxy(Proxy.Type.HTTP, new java.net.InetSocketAddress("127.0.0.1", 7890)))
             .build();
     private String domain = "https://k887d9ove.ajdegf.com/";
 
@@ -88,14 +89,19 @@ public class AlphaImpl implements Client {
                 object.getAsJsonArray("category").forEach(ele -> {
                     tags.add(((JsonObject) ele).get("title").getAsString());
                 });
+                int views = object.get("play").getAsInt();
                 video.setTags(tags);
                 video.setTitle(title);
+                video.setId(Integer.parseInt(id));
                 video.setCover(cover);
                 video.setLength(Integer.parseInt(duration));
                 video.setOriginLink(originLink);
                 User user = new User();
                 user.setName(object.get("user").getAsJsonObject().get("nick").getAsString());
+                user.setAvatar(object.get("user").getAsJsonObject().get("avatar").getAsString());
+                user.setFollowers(object.get("user").getAsJsonObject().get("fans").getAsInt());
                 video.setAuthor(user);
+
                 video.setTime(object.get("created_at").getAsString());
                 videoList.add(video);
             });
