@@ -32,7 +32,6 @@ public class AlphaImpl implements Client {
     protected static final Gson gson = new Gson();
     protected OkHttpClient client = new OkHttpClient.Builder()
             .addInterceptor(new EncryptInterceptor())
-            .proxy(new Proxy(Proxy.Type.HTTP, new java.net.InetSocketAddress("127.0.0.1", 7890)))
             .build();
     private String domain = "https://k887d9ove.ajdegf.com/";
 
@@ -119,7 +118,7 @@ public class AlphaImpl implements Client {
 
     @Override
     public String getPlayLink(Video video) {
-        String url = "https://parser.ikuntech.xyz/parser?origin=" + video.getOriginLink() + "&&count=" + video.getLength();
+        String url = "https://parser.ikuntech.xyz/parser?origin=" + video.getOriginLink() + "&&count=" + video.getLength()/10;
         Request request = new Request.Builder()
                 .url(url)
                 .get()
