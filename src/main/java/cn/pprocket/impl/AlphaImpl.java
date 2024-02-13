@@ -186,8 +186,11 @@ class EncryptInterceptor implements Interceptor {
     @Override
     public Response intercept(@NotNull Chain chain) throws IOException {
         Request request = chain.request();
+        if (request.body() == null) {
+            return chain.proceed(request);
+        }
         Buffer buffer = new Buffer();
-        assert request.body() != null;
+        //assert request.body() != null;
         request.body().writeTo(buffer);
         String s = buffer.readString(StandardCharsets.UTF_8);
         String encrypt = encrypt(s);

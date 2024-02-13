@@ -13,7 +13,8 @@ fun main() {
     Security.addProvider(BouncyCastleProvider())
     val client = AlphaImpl()
     client.login("7c706e97-108a-3f61-8e07-14da33dea564")
-    var recommend = client.getRecommend(15)
+    val recommend = client.getRecommend(15)
+    client.getPlayLink(recommend[0])
     System.nanoTime()
 
 
