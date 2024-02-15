@@ -1,6 +1,7 @@
 package cn.pprocket
 
 import cn.pprocket.impl.AlphaImpl
+import cn.pprocket.impl.AzureImpl
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -12,9 +13,8 @@ import javax.crypto.spec.SecretKeySpec
 fun main() {
     Security.addProvider(BouncyCastleProvider())
     val client = AlphaImpl()
-    client.login("7c706e97-108a-3f61-8e07-14da33dea564")
-    val recommend = client.getRecommend(15)
-    client.getPlayLink(recommend[0])
+    client.login("ffffffff-a197-1a34-a197-1a3400000000")
+    client.search("初中",1)
     System.nanoTime()
 
 

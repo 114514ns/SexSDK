@@ -3,13 +3,14 @@ package cn.pprocket.impl;
 import cn.pprocket.Client;
 import cn.pprocket.object.User;
 import cn.pprocket.object.Video;
-import cn.pprocket.utils.Enctypt;
+import cn.pprocket.utils.Encrypt;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import okio.Buffer;
@@ -66,7 +67,6 @@ public class AlphaImpl implements Client {
         pageInfo.setPage(page);
         pageInfo.setPage_size(20);
         String url = domain + "app/api/search/list";
-        List<Video> videoList = new ArrayList<>();
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Content-Type", "application/json")
@@ -76,38 +76,43 @@ public class AlphaImpl implements Client {
         try {
             String string = client.newCall(request).execute().body().string();
             JsonArray array = JsonParser.parseString(string).getAsJsonArray();
-            array.forEach(jsonElement -> {
-                JsonObject object = jsonElement.getAsJsonObject();
-                Video video = new Video();
-                String id = object.get("id").getAsString();
-                String title = object.get("title").getAsString();
-                String cover = object.get("cover").getAsString();
-                String duration = object.get("duration").getAsString();
-                String originLink = object.get("smu").getAsString();
-                List<String> tags = new ArrayList<>();
-                object.getAsJsonArray("category").forEach(ele -> {
-                    tags.add(((JsonObject) ele).get("title").getAsString());
-                });
-                int views = object.get("play").getAsInt();
-                video.setTags(tags);
-                video.setTitle(title);
-                video.setId(Integer.parseInt(id));
-                video.setCover(cover);
-                video.setLength(Integer.parseInt(duration));
-                video.setOriginLink(originLink);
-                User user = new User();
-                user.setName(object.get("user").getAsJsonObject().get("nick").getAsString());
-                user.setAvatar(object.get("user").getAsJsonObject().get("avatar").getAsString());
-                user.setFollowers(object.get("user").getAsJsonObject().get("fans").getAsInt());
-                video.setAuthor(user);
+            return parser(array);
 
-                video.setTime(object.get("created_at").getAsString());
-                videoList.add(video);
-            });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return videoList;
+    }
+    public List<Video> parser(JsonArray array) {
+        List<Video> list = new ArrayList<>();
+        array.forEach(jsonElement -> {
+            JsonObject object = jsonElement.getAsJsonObject();
+            Video video = new Video();
+            String id = object.get("id").getAsString();
+            String title = object.get("title").getAsString();
+            String cover = object.get("cover").getAsString();
+            String duration = object.get("duration").getAsString();
+            String originLink = object.get("smu").getAsString();
+            List<String> tags = new ArrayList<>();
+            object.getAsJsonArray("category").forEach(ele -> {
+                tags.add(((JsonObject) ele).get("title").getAsString());
+            });
+            int views = object.get("play").getAsInt();
+            video.setTags(tags);
+            video.setTitle(title);
+            video.setId(Integer.parseInt(id));
+            video.setCover(cover);
+            video.setLength(Integer.parseInt(duration));
+            video.setOriginLink(originLink);
+            User user = new User();
+            user.setName(object.get("user").getAsJsonObject().get("nick").getAsString());
+            user.setAvatar(object.get("user").getAsJsonObject().get("avatar").getAsString());
+            user.setFollowers(object.get("user").getAsJsonObject().get("fans").getAsInt());
+            video.setAuthor(user);
+
+            video.setTime(object.get("created_at").getAsString());
+            list.add(video);
+        });
+        return list;
     }
 
     @Override
@@ -140,11 +145,25 @@ public class AlphaImpl implements Client {
         return null;
     }
 
+    @SneakyThrows
     @Override
     public List<Video> search(String keyword, int page) {
-        return null;
+        SearchBean searchBean = new SearchBean();
+        searchBean.setKeywords(keyword);
+        searchBean.setPage(String.valueOf(page));
+        searchBean.setPage_size("20");
+        searchBean.setOrder_key("");
+        String url = domain + "app/api/search/list";
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Cookie", cookie)
+                .post(RequestBody.create(gson.toJson(searchBean).getBytes()))
+                .build();
+        String string = client.newCall(request).execute().body().string();
+        JsonArray array = JsonParser.parseString(string).getAsJsonArray();
+        return parser(array);
     }
-    // AES PKCS7Padding
 
 
 }
@@ -178,6 +197,14 @@ class TokenBean {
 class DataWrapper {
     private String handshake;
     private String data;
+}
+@Data
+class SearchBean {
+    private String order_key;
+    private String keywords;
+    private String page;
+    private String page_size;
+
 }
 
 class EncryptInterceptor implements Interceptor {
@@ -226,7 +253,7 @@ class EncryptInterceptor implements Interceptor {
 
     public static String encrypt(String content) {
         try {
-            return Enctypt.encrypt("l8N2iooyp07M9IWa", content);
+            return Encrypt.encrypt("l8N2iooyp07M9IWa", content);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -234,7 +261,7 @@ class EncryptInterceptor implements Interceptor {
 
     public static String decrypt(String content) {
         try {
-            return Enctypt.decrypt("l8N2iooyp07M9IWa", content);
+            return Encrypt.decrypt("l8N2iooyp07M9IWa", content);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

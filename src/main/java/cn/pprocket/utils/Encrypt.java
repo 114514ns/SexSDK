@@ -6,7 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-public class Enctypt {
+public class Encrypt {
     public static String encrypt(String key, String plainText) throws Exception {
         SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
