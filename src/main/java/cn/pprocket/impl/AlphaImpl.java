@@ -119,6 +119,9 @@ public class AlphaImpl implements Client {
     public Video getVideo(String id) {
         return null;
     }
+    public String getCookie() {
+        return cookie;
+    }
 
 
     @Override
@@ -135,10 +138,7 @@ public class AlphaImpl implements Client {
         }
     }
 
-    @Override
-    public String getCookie() {
-        return cookie;
-    }
+
 
     @Override
     public List<Video> getRelated() {

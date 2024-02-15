@@ -12,9 +12,9 @@ import javax.crypto.spec.SecretKeySpec
 
 fun main() {
     Security.addProvider(BouncyCastleProvider())
-    val client = AlphaImpl()
-    client.login("ffffffff-a197-1a34-a197-1a3400000000")
-    client.search("初中",1)
+    val client = AzureImpl()
+    client.login("pheuxb7xu|m2zkrg")
+    client.getRecommend(1)
     System.nanoTime()
 
 
