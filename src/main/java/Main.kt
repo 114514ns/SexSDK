@@ -1,5 +1,6 @@
 package cn.pprocket
 
+import cn.pprocket.cn.pprocket.impl.BilibiliImpl
 import cn.pprocket.impl.AlphaImpl
 import cn.pprocket.impl.AzureImpl
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -12,9 +13,14 @@ import javax.crypto.spec.SecretKeySpec
 
 fun main() {
     Security.addProvider(BouncyCastleProvider())
-    val client = AzureImpl()
-    client.login("pheuxb7xu|m2zkrg")
-    client.getRecommend(1)
+    val client = BilibiliImpl()
+    FileReader(File("cookie.txt")).use {
+        client.login(it.readText())
+    }
+    var recommend = client.getRecommend(1)
+    var playLink = client.getPlayLink(recommend[0])
+    //client.login("pheuxb7xu|m2zkrg")
+    //client.getRecommend(1)
     System.nanoTime()
 
 

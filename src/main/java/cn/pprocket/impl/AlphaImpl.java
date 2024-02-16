@@ -99,7 +99,7 @@ public class AlphaImpl implements Client {
             int views = object.get("play").getAsInt();
             video.setTags(tags);
             video.setTitle(title);
-            video.setId(Integer.parseInt(id));
+            video.setId(id);
             video.setCover(cover);
             video.setLength(Integer.parseInt(duration));
             video.setOriginLink(originLink);
@@ -163,6 +163,11 @@ public class AlphaImpl implements Client {
         String string = client.newCall(request).execute().body().string();
         JsonArray array = JsonParser.parseString(string).getAsJsonArray();
         return parser(array);
+    }
+
+    @Override
+    public void shutdown() {
+
     }
 
 

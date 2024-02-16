@@ -12,4 +12,5 @@ public interface Client {
     String getPlayLink(Video video);
     List<Video> getRelated();
     List<Video> search(String keyword, int page);
+    void shutdown();
 }

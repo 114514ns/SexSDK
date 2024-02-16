@@ -86,7 +86,7 @@ class AzureImpl : Client {
                 val plays = element.get("showNum").asInt
                 val length = element.get("videoTime").asInt
                 val video = Video()
-                video.id = Integer.decode(id)
+                video.id = id
                 video.title = title
                 video.cover = image
                 video.author = author
@@ -115,6 +115,10 @@ class AzureImpl : Client {
 
     override fun search(keyword: String?, page: Int): MutableList<Video> {
         TODO("Not yet implemented")
+    }
+
+    override fun shutdown() {
+
     }
 
 
