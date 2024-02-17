@@ -55,7 +55,7 @@ class BilibiliImpl : Client {
         JsonParser.parseString(string).asJsonObject.get("item").asJsonArray.forEach {
             val video = BiliVideo()
             video.title = it.asJsonObject.get("title").asString
-            video.cover = it.asJsonObject.get("pic").asString
+            video.cover = it.asJsonObject.get("pic").asString.replace("http","https")
             video.id = it.asJsonObject.get("bvid").asString
             val stat = it.asJsonObject.get("stat").asJsonObject
             video.views = stat.get("view").asInt

@@ -31,12 +31,11 @@ public class WbiTest {
         String subKey = "4932caff0ff746eab6f01bf08b70ac45";
         String mixinKey = getMixinKey(imgKey, subKey);
         System.out.println(mixinKey);
-        String urlString =
-                "https://api.bilibili.com/x/web-interface/wbi/search/all/v2?__refresh__=true&_extra=&context=&page=1&page_size=42&order=&duration=&from_source=&from_spmid=333.337&platform=pc&highlight=1&single_column=0&keyword=刺客信条&qv_id=t67Tro0nuLc8iPFKovC3Lz8QhEWjiuQP&ad_resource=5646&source_tag=3&web_location=1430654&w_rid=c5990fc80d5c3d4fc96f3d20578e0126&wts=1708078699";
+        String urlString = "https://api.bilibili.com/x/player/wbi/playurl?bvid=BV1xp4y1P7MD&cid=1274815261";
         Map<String, Object> map;
         URL url = new URL(urlString);
         map = parseQueryParameters(url);
-        map.put("wts", 1708078699);
+        map.put("wts", System.currentTimeMillis()/1000);
         StringJoiner param = new StringJoiner("&");
 
         map.entrySet().stream()
