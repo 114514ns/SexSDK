@@ -66,6 +66,7 @@ class BilibiliImpl : Client {
             video.author.avatar = it.asJsonObject.get("owner").asJsonObject.get("face").asString
             video.time = convertTime(it.asJsonObject.get("pubdate").asLong * 1000)
             video.cid = it.asJsonObject.get("cid").asString
+            video.length = it.asJsonObject.get("duration").asInt
             lists.add(video)
         }
         return lists
