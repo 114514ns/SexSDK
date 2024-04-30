@@ -55,7 +55,7 @@ class BilibiliImpl : Client {
         JsonParser.parseString(string).asJsonObject.get("item").asJsonArray.forEach {
             val video = BiliVideo()
             video.title = it.asJsonObject.get("title").asString
-            video.cover = it.asJsonObject.get("pic").asString.replace("http","https")
+            video.cover = it.asJsonObject.get("pic").asString.replace("http", "https")
             video.id = it.asJsonObject.get("bvid").asString
             val stat = it.asJsonObject.get("stat").asJsonObject
             video.views = stat.get("view").asInt
@@ -78,7 +78,7 @@ class BilibiliImpl : Client {
 
     override fun getPlayLink(video: Video?): String {
         video as BiliVideo
-        val url = "https://api.bilibili.com/x/player/playurl?bvid=${video.id}&cid=${video.cid}"
+        val url = "https://api.bilibili.com/x/player/wbi/playurl?fnval=4048&bvid=${video.id}&cid=${video.cid}"
         val request = Request.Builder()
             .url(url)
             .get()
@@ -86,7 +86,7 @@ class BilibiliImpl : Client {
         val response = client.newCall(request).execute()
         val body = response.body.string()
         val jsonObject = JsonParser.parseString(body).asJsonObject
-        return jsonObject.get("durl").asJsonArray[0].asJsonObject.get("url").asString
+        return jsonObject.get("dash").asJsonObject.getAsJsonArray("video")[0].asJsonObject.get("base_url").asString
     }
 
     override fun getRelated(): MutableList<Video> {
@@ -94,7 +94,27 @@ class BilibiliImpl : Client {
     }
 
     override fun search(keyword: String?, page: Int): MutableList<Video> {
-        TODO("Not yet implemented")
+        val url = "https://api.bilibili.com/x/web-interface/wbi/search/all/v2?keyword=${keyword}&page=${page}"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+        val string = client.newCall(request).execute().body.string()
+        val list = mutableListOf<Video>()
+        JsonParser.parseString(string).asJsonObject.get("result").asJsonArray.last().asJsonObject.get("data").asJsonArray.forEach {
+            val video = BiliVideo()
+            val author = User()
+            author.name = it.asJsonObject.get("author").asString
+
+            video.title = it.asJsonObject.get("description").asString
+            video.views = it.asJsonObject.get("play").asInt
+            video.id = it.asJsonObject.get("id").asString
+            video.cover = "https:${it.asJsonObject.get("pic").asString}"
+            val arr = it.asJsonObject.get("duration").asString.split(":")
+            video.length = arr[0].toInt()*60 + arr[1].toInt()
+            list.add(video)
+        }
+        return list
     }
 
     override fun shutdown() {
